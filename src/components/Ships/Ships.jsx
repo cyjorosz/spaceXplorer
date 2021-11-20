@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // TO DO
 // - Header:
@@ -20,7 +21,10 @@ import React from 'react';
 const Ships = () => {
   return (
     <>
-      <div>Header component</div>
+      <div>
+        <h1>Header Component</h1>
+        <Link to="/login">Log out</Link>
+      </div>
       <div>Table with data from space X</div>
     </>
   );
