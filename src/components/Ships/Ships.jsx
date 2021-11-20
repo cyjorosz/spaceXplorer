@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
-import { specialChars } from '@testing-library/user-event';
 
 // TO DO
 // - Header:
@@ -24,15 +23,20 @@ import { specialChars } from '@testing-library/user-event';
 const Ships = () => {
   const SHIPS_API = `https://api.spacexdata.com/v4/ships`;
 
-  const [ships, setShips] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [ships, setShips] = useState([]);
 
   const fetchShipsData = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(SHIPS_API);
+      setLoading(false);
       setShips(response.data);
       console.log(ships);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      setError(error);
     }
   };
 
@@ -64,18 +68,19 @@ const Ships = () => {
             })}
           </tr>
           <tbody>
-            {ships.map((ship) => {
-              return (
-                <tr key={ship.id}>
-                  <td>{ship.name}</td>
-                  <td>{ship.type}</td>
-                  <td>{ship.active}</td>
-                  <td>{ship.year_built}</td>
-                  <td>{ship.home_port}</td>
-                  <td>view</td>
-                </tr>
-              );
-            })}
+            {ships &&
+              ships.map((ship) => {
+                return (
+                  <tr key={ship.id}>
+                    <td>{ship.name}</td>
+                    <td>{ship.type}</td>
+                    <td>{ship.active}</td>
+                    <td>{ship.year_built}</td>
+                    <td>{ship.home_port}</td>
+                    <td>view</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
