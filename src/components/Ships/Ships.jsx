@@ -67,6 +67,28 @@ const Ships = () => {
       </div>
       <div>
         <h2>Table with data from space X API</h2>
+        <div>
+          {selectedShip && (
+            <div style={{ display: 'flex' }}>
+              <div style={{ width: '220px' }}>
+                <img
+                  src={
+                    selectedShip.image ? selectedShip.image : 'https://www.fillmurray.com/640/360'
+                  }
+                  alt="Ship"
+                  style={{ maxWidth: '200px', height: '150px' }}
+                />
+              </div>
+              <div style={{ width: 'auto' }}>
+                <h2 style={{ marginTop: '0px' }}>{selectedShip.name}</h2>
+                <div>
+                  {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         <table>
           <tbody>
             <tr>
