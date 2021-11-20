@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
@@ -32,7 +32,18 @@ const Ships = () => {
     }
   };
 
-  fetchShipsData();
+  useEffect(() => {
+    fetchShipsData();
+  });
+
+  const columns = [
+    { id: 'name', label: 'Name' },
+    { id: 'type', label: 'Type' },
+    { id: 'active', label: 'Active' },
+    { id: 'year built', label: 'Year Built' },
+    { id: 'home port', label: 'Home Port' },
+    { id: 'details', label: 'Details' },
+  ];
 
   return (
     <>
@@ -40,7 +51,19 @@ const Ships = () => {
         <h1>Header Component</h1>
         <Link to="/login">Log out</Link>
       </div>
-      <div>Table with data from space X</div>
+      <div>
+        <h2>Table with data from space X API</h2>
+        <table>
+          {columns.map((column) => {
+            return (
+              <thead key={column.id}>
+                <span>{column.label}</span>
+              </thead>
+            );
+          })}
+          <tbody>{/* response from api  */}</tbody>
+        </table>
+      </div>
     </>
   );
 };
