@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
+import { specialChars } from '@testing-library/user-event';
 
 // TO DO
 // - Header:
@@ -23,10 +24,13 @@ import axios from 'axios';
 const Ships = () => {
   const SHIPS_API = `https://api.spacexdata.com/v4/ships`;
 
+  const [ships, setShips] = useState({});
+
   const fetchShipsData = async () => {
     try {
       const response = await axios.get(SHIPS_API);
-      console.log(response);
+      setShips(response.data);
+      console.log(ships);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +38,7 @@ const Ships = () => {
 
   useEffect(() => {
     fetchShipsData();
-  });
+  }, []);
 
   const columns = [
     { id: 'name', label: 'Name' },
@@ -54,14 +58,25 @@ const Ships = () => {
       <div>
         <h2>Table with data from space X API</h2>
         <table>
-          {columns.map((column) => {
-            return (
-              <thead key={column.id}>
-                <span>{column.label}</span>
-              </thead>
-            );
-          })}
-          <tbody>{/* response from api  */}</tbody>
+          <tr>
+            {columns.map((column) => {
+              return <th key={column.id}>{column.label}</th>;
+            })}
+          </tr>
+          <tbody>
+            {ships.map((ship) => {
+              return (
+                <tr key={ship.id}>
+                  <td>{ship.name}</td>
+                  <td>{ship.type}</td>
+                  <td>{ship.active}</td>
+                  <td>{ship.year_built}</td>
+                  <td>{ship.home_port}</td>
+                  <td>view</td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
     </>
