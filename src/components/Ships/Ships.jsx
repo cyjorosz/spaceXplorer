@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import axios from 'axios';
+
 // TO DO
 // - Header:
 //   - Displays title, description (copied from docs).
@@ -19,6 +21,19 @@ import { Link } from 'react-router-dom';
 //   - Displays 'launches' list that contains urls to wikipeadia articles about the launches ship was apart of
 
 const Ships = () => {
+  const SHIPS_API = `https://api.spacexdata.com/v4/ships`;
+
+  const fetchShipsData = async () => {
+    try {
+      const response = await axios.get(SHIPS_API);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchShipsData();
+
   return (
     <>
       <div>
