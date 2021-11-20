@@ -27,6 +27,8 @@ const Ships = () => {
   const [error, setError] = useState(false);
   const [ships, setShips] = useState([]);
 
+  const [selectedShip, setSelectedShip] = useState();
+
   const fetchShipsData = async () => {
     setLoading(true);
     try {
@@ -48,10 +50,15 @@ const Ships = () => {
     { id: 'name', label: 'Name' },
     { id: 'type', label: 'Type' },
     { id: 'active', label: 'Active' },
-    { id: 'year built', label: 'Year Built' },
-    { id: 'home port', label: 'Home Port' },
+    { id: 'year_built', label: 'Year Built' },
+    { id: 'home_port', label: 'Home Port' },
     { id: 'details', label: 'Details' },
   ];
+
+  const viewShipDetails = (ship) => {
+    setSelectedShip(ship);
+    console.log('selected ship', selectedShip);
+  };
 
   return (
     <>
@@ -77,7 +84,7 @@ const Ships = () => {
                     <td>{ship.active}</td>
                     <td>{ship.year_built}</td>
                     <td>{ship.home_port}</td>
-                    <td>view</td>
+                    <td onClick={() => viewShipDetails(ship)}>view</td>
                   </tr>
                 );
               })}
