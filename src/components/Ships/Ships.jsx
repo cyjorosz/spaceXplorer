@@ -26,7 +26,6 @@ const Ships = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [ships, setShips] = useState([]);
-
   const [selectedShip, setSelectedShip] = useState();
 
   const fetchShipsData = async () => {
@@ -35,7 +34,7 @@ const Ships = () => {
       const response = await axios.get(SHIPS_API);
       setLoading(false);
       setShips(response.data);
-      console.log(ships);
+      console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -69,19 +68,20 @@ const Ships = () => {
       <div>
         <h2>Table with data from space X API</h2>
         <table>
-          <tr>
-            {columns.map((column) => {
-              return <th key={column.id}>{column.label}</th>;
-            })}
-          </tr>
           <tbody>
+            <tr>
+              {columns.map((column) => {
+                return <th key={column.id}>{column.label}</th>;
+              })}
+            </tr>
+
             {ships &&
               ships.map((ship) => {
                 return (
                   <tr key={ship.id}>
                     <td>{ship.name}</td>
                     <td>{ship.type}</td>
-                    <td>{ship.active}</td>
+                    <td>{ship.active === true ? 'Yes' : 'No'}</td>
                     <td>{ship.year_built}</td>
                     <td>{ship.home_port}</td>
                     <td onClick={() => viewShipDetails(ship)}>view</td>
