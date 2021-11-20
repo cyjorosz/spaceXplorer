@@ -1,7 +1,5 @@
 import React from 'react';
 
-const Error = () => {
-  return <div>Error Component</div>;
+export const Error = ({ error }) => {
+  return <div>Error: {error.message}</div>;
 };
-
-export default Error;
