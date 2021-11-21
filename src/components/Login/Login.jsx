@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+// import { Link } from 'react-router-dom';
+// import axios from 'axios';
 // TO DO:
 // Textbox input fields are:
 
@@ -16,13 +16,40 @@ import { Link } from 'react-router-dom';
 // - If 'remember me' checkbox is checked, successful login should be persisted into the local storage (it can be a simple flag: authenticated: true/false), which means, when the app is reloaded from /ships page, the app should land on the /ships page again.
 // - If 'remember me' is not checked, successful login should not be persisted into the local storage, which means, when app is reloaded from /ships page, the app should land on the /login page.
 
-const Login = () => {
+async function loginUser(credentials) {
+  return fetch('http://localhost:8080/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  }).then((data) => data.json());
+}
+
+// BEGIN refactoring to arrow function with API constant and use axios instead of native fetch
+// const LOGIN_ENDPOINT = 'http://localhost:8080/login';
+// const loginUser = async (credentials) => {
+//   return axios
+//     .post(LOGIN_ENDPOINT, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(credentials),
+//     })
+//     .then((data) => data.json());
+// };
+
+const Login = ({ setToken }) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('submit login');
+    const token = await loginUser({
+      email,
+      password,
+    });
+    setToken(token);
   };
 
   return (
@@ -42,11 +69,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label>Password</label>
+        {/* <label>Password</label>
         <input type="checkbox" />
-        <label>Remember me</label>
-        <input type="submit" value="Login" />
-        <Link to="/ships">Ships</Link>
+        <label>Remember me</label> */}
+        {/* <Link to="/ships">Ships</Link> */}
+        <button type="submit">Login</button>
       </form>
     </>
   );
