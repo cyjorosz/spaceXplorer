@@ -13,7 +13,7 @@ import axios from 'axios';
 //   - The table should be server-side paginated with 10 results by page. Pagination controls should contain buttons for previous/next page and total number of pages.
 
 // - Right - Details view:
-//   - It should contain ship's name, year built, roles and image if it's available. If an image is not available, the placeholder image should be rendered.
+//   - It should contain  roles
 //   - Displays 'launches' list that contains urls to wikipeadia articles about the launches ship was apart of
 
 const Ships = () => {
@@ -31,7 +31,7 @@ const Ships = () => {
       let response = await axios.get(SHIPS_API);
       setLoading(false);
       setShips(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -110,6 +110,7 @@ const Ships = () => {
                 <div>
                   {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
                 </div>
+                <p>{selectedShip.roles.join()}</p>
               </div>
             </div>
           )}
