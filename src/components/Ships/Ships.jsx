@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
@@ -9,14 +9,9 @@ import axios from 'axios';
 //   - Log out button (routes to login page and removes authentication flag from local storage if it's persisted).
 
 // - Left - Table:
-
-//   - Displays response from the API request https://api.spacexdata.com/v4/ships.
-//   - It should display columns: name, type, active, year built, home port and details column, that contains 'view' button for each record, which functionality will be described below.
 //   - The table should be server-side paginated with 10 results by page. Pagination controls should contain buttons for previous/next page and total number of pages.
-//   - Table should be servier-side sortable by all displayed columns.
 
 // - Right - Details view:
-//   - Displays details about the selected ship from the table, by clicking 'view' button from the details column.
 //   - It should contain ship's name, year built, roles and image if it's available. If an image is not available, the placeholder image should be rendered.
 //   - Displays 'launches' list that contains urls to wikipeadia articles about the launches ship was apart of
 
@@ -27,14 +22,15 @@ const Ships = () => {
   const [error, setError] = useState(false);
   const [ships, setShips] = useState([]);
   const [selectedShip, setSelectedShip] = useState();
+  const [sortOrder, setSortOrder] = useState({ orderDirection: 'asc', orderByColumn: 'id' });
 
   const fetchShipsData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(SHIPS_API);
+      let response = await axios.get(SHIPS_API);
       setLoading(false);
       setShips(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -54,9 +50,38 @@ const Ships = () => {
     { id: 'details', label: 'Details' },
   ];
 
+  // Sort the rows that are passed in, in the order defined by the sortOrder
+  const sortRows = (rows, sortOrder) => {
+    const orderByColumn = sortOrder.orderByColumn;
+    // console.log('sorting by ' + orderByColumn);
+    const sortedRows = rows.sort((a, b) => {
+      let ascendingOrder = a[orderByColumn] > b[orderByColumn] ? 1 : -1;
+      if (sortOrder.orderDirection === 'asc') {
+        return ascendingOrder;
+      } else {
+        return ascendingOrder * -1;
+      }
+    });
+    return sortedRows;
+  };
+
+  useMemo(() => sortRows(ships, sortOrder), [ships, sortOrder]);
+
+  const handleSort = (orderByColumn) => {
+    // console.log('sorting by ' + orderByColumn);
+    let orderDirection = 'asc';
+    if (sortOrder.orderByColumn === orderByColumn) {
+      // If we have sorted on the same column, flip the sorting direction: ;
+      orderDirection = sortOrder.orderDirection === 'asc' ? 'desc' : 'asc';
+    }
+    setSortOrder(() => ({
+      orderDirection: orderDirection,
+      orderByColumn: orderByColumn,
+    }));
+  };
+
   const viewShipDetails = (ship) => {
     setSelectedShip(ship);
-    console.log('selected ship', selectedShip);
   };
 
   return (
@@ -88,15 +113,27 @@ const Ships = () => {
             </div>
           )}
         </div>
-
         <table>
           <tbody>
             <tr>
               {columns.map((column) => {
-                return <th key={column.id}>{column.label}</th>;
+                const sortIcon = () => {
+                  if (column.id === sortOrder.orderByColumn) {
+                    if (sortOrder.orderDirection === 'asc') {
+                      return 'UP';
+                    }
+                    return 'DOWN';
+                  } else {
+                    return '️SORT';
+                  }
+                };
+                return (
+                  <th key={column.id} onClick={() => handleSort(column.id)}>
+                    {column.label} {sortIcon()}
+                  </th>
+                );
               })}
             </tr>
-
             {ships &&
               ships.map((ship) => {
                 return (
