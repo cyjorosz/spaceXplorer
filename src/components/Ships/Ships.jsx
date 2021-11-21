@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons/ti';
 
 import axios from 'axios';
 
@@ -120,11 +121,11 @@ const Ships = () => {
                 const sortIcon = () => {
                   if (column.id === sortOrder.orderByColumn) {
                     if (sortOrder.orderDirection === 'asc') {
-                      return 'UP';
+                      return <TiArrowSortedUp />;
                     }
-                    return 'DOWN';
+                    return <TiArrowSortedDown />;
                   } else {
-                    return '️SORT';
+                    return <TiArrowUnsorted />;
                   }
                 };
                 return (
