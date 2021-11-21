@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons/ti';
 
-import axios from 'axios';
+import { Error } from 'components/Error/Error';
+import Loading from 'components/Loading/Loading';
 
 // TO DO
 // - Header:
@@ -13,7 +15,6 @@ import axios from 'axios';
 //   - The table should be server-side paginated with 10 results by page. Pagination controls should contain buttons for previous/next page and total number of pages.
 
 // - Right - Details view:
-//   - It should contain  roles
 //   - Displays 'launches' list that contains urls to wikipeadia articles about the launches ship was apart of
 
 const Ships = () => {
@@ -92,8 +93,11 @@ const Ships = () => {
         <Link to="/login">Log out</Link>
       </div>
       <div>
-        <h2>Table with data from space X API</h2>
+        <h2>Table with data from spaceX API</h2>
+
         <div>
+          {error && <Error error={error} />}
+          {loading ? <Loading /> : null}
           {selectedShip && (
             <div style={{ display: 'flex' }}>
               <div style={{ width: '220px' }}>
