@@ -130,7 +130,7 @@ const Ships = () => {
                 };
                 return (
                   <th key={column.id} onClick={() => handleSort(column.id)}>
-                    {column.label} {sortIcon()}
+                    {column.label} {column.id !== 'details' ? sortIcon() : null}
                   </th>
                 );
               })}
