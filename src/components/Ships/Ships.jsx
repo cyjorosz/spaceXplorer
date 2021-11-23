@@ -29,11 +29,14 @@ const Ships = () => {
   const [selectedShip, setSelectedShip] = useState();
   const [sortOrder, setSortOrder] = useState({ orderDirection: 'asc', orderByColumn: 'id' });
 
-  const { width } = useWindowWidth();
-  const breakpoint = 620;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { pageWidth } = useWindowWidth();
 
   const isColumnVisible = (column) => {
-    return width > breakpoint || !column.hiddenOnMobile;
+    return pageWidth > 620 || !column.hiddenOnMobile;
   };
 
   const columns = [
@@ -44,13 +47,27 @@ const Ships = () => {
     { id: 'home_port', label: 'Home Port', hiddenOnMobile: true },
   ];
 
+  const getCurrentRows = () => {
+    if (!ships) {
+      return [];
+    }
+    // currentPage
+    // rowsPerPage
+    // return data based on ^
+    // Given the pageNumber, get the  for this page from ships
+    return [...ships].slice((currentPage - 1) * rowsPerPage, rowsPerPage * currentPage);
+  };
+
   const fetchShipsData = async () => {
     setLoading(true);
     try {
       const response = await axios.get(SHIPS_API);
       setLoading(false);
+      setTotalPages(Math.ceil(response.data.length / rowsPerPage));
+      console.log('totalpage', totalPages);
       setShips(response.data);
-      // console.log(response.data);
+
+      console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -59,7 +76,7 @@ const Ships = () => {
 
   useEffect(() => {
     fetchShipsData();
-  }, []);
+  }, [currentPage]);
 
   // Sort the rows that are passed in, in the order defined by the sortOrder
   const sortRows = (rows, sortOrder) => {
@@ -120,21 +137,20 @@ const Ships = () => {
           })}
           <th>Details</th>
         </tr>
-        {ships &&
-          ships.map((ship) => {
-            return (
-              <tr key={ship.id}>
-                {columns.map((column) => {
-                  let description = ship[column.id];
-                  if (column.id === 'active') {
-                    description = description ? 'yes' : 'no';
-                  }
-                  return isColumnVisible(column) && <td>{description}</td>;
-                })}
-                <td onClick={() => viewShipDetails(ship)}>view</td>
-              </tr>
-            );
-          })}
+        {getCurrentRows().map((ship) => {
+          return (
+            <tr key={ship.id}>
+              {columns.map((column) => {
+                let description = ship[column.id];
+                if (column.id === 'active') {
+                  description = description ? 'yes' : 'no';
+                }
+                return isColumnVisible(column) && <td>{description}</td>;
+              })}
+              <td onClick={() => viewShipDetails(ship)}>view</td>
+            </tr>
+          );
+        })}
       </S.Table>
     );
   };
@@ -173,7 +189,29 @@ const Ships = () => {
           )}
         </div>
         <Table />
-        {/* {width < breakpoint ? <MobileTable /> : <DesktopTable />} */}
+        <div>
+          <div>
+            Page {currentPage} of {totalPages}
+          </div>
+          {currentPage > 1 && (
+            <button
+              onClick={() => {
+                setCurrentPage(currentPage - 1);
+              }}
+            >
+              Previous
+            </button>
+          )}
+          {currentPage < totalPages && (
+            <button
+              onClick={() => {
+                setCurrentPage(currentPage + 1);
+              }}
+            >
+              Next
+            </button>
+          )}
+        </div>
       </div>
     </>
   );
