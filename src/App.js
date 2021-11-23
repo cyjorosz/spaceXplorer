@@ -13,7 +13,6 @@ const App = () => {
 
   return (
     <>
-    <h1>Space Xplorer</h1>
       <Routes>
         <Route path="/login" element={<Login />}/>
         <Route path="/ships" element={<Ships />}/>
