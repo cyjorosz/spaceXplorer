@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { setToken } from '../../helpers/token';
+import { saveTokenToSessionStorage, saveTokenToLocalStorage } from '../../helpers/token';
 // TO DO:
 // Textbox input fields are:
 
@@ -20,6 +20,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const LOGIN_ENDPOINT = 'http://localhost:8080/login';
 
@@ -28,16 +29,11 @@ const Login = () => {
     // console.log('credentials 2', JSON.stringify(credentials));
     return axios.post(LOGIN_ENDPOINT, credentials).then((data) => {
       let response = data.data;
-      console.log(JSON.stringify(response));
       if (response.success) {
-        let rememberMe = false;
-        if (rememberMe) {
-          // TODO persist token in local storage
-        }
-        // console.log('Token is ' + response.token);
-        setToken(response.token);
+        rememberMe
+          ? saveTokenToLocalStorage(response.token)
+          : saveTokenToSessionStorage(response.token);
         window.location.href = '/ships';
-        //navigate(() => '/ships');
       } else {
         setError(response.errorMessage);
       }
@@ -52,6 +48,10 @@ const Login = () => {
     };
     // console.log('credentials 1', JSON.stringify(credentials));
     await loginUser(credentials);
+  };
+
+  const handleRememberMe = (e) => {
+    setRememberMe(e.target.checked);
   };
 
   return (
@@ -72,10 +72,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {/* <label>Password</label>
-        <input type="checkbox" />
-        <label>Remember me</label> */}
-        {/* <Link to="/ships">Ships</Link> */}
+        <label>Password</label>
+        <input type="checkbox" value={rememberMe} onChange={handleRememberMe} />
+        <label>Remember me</label>
         <button type="submit">Login</button>
       </form>
     </>
