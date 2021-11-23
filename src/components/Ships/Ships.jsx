@@ -8,6 +8,7 @@ import Loading from 'components/Loading/Loading';
 import * as S from './style';
 
 import useWindowWidth from 'helpers/useWindowWidth';
+import { desktopColumns, mobileColumns } from './Columns';
 
 // TO DO
 // - Header:
@@ -48,21 +49,6 @@ const Ships = () => {
   useEffect(() => {
     fetchShipsData();
   }, []);
-
-  const columns = [
-    { id: 'name', label: 'Name' },
-    { id: 'type', label: 'Type' },
-    { id: 'active', label: 'Active' },
-    { id: 'year_built', label: 'Year Built' },
-    { id: 'home_port', label: 'Home Port' },
-    { id: 'details', label: 'Details' },
-  ];
-
-  const mobileColumns = [
-    { id: 'name', label: 'Name' },
-    { id: 'type', label: 'Type' },
-    { id: 'details', label: 'Details' },
-  ];
 
   // Sort the rows that are passed in, in the order defined by the sortOrder
   const sortRows = (rows, sortOrder) => {
@@ -143,7 +129,7 @@ const Ships = () => {
     return (
       <S.DesktopTable>
         <tr>
-          {columns.map((column) => {
+          {desktopColumns.map((column) => {
             const sortIcon = () => {
               if (column.id === sortOrder.orderByColumn) {
                 if (sortOrder.orderDirection === 'asc') {
@@ -165,7 +151,7 @@ const Ships = () => {
           ships.map((ship) => {
             return (
               <tr key={ship.id}>
-                {columns.map((column) => {
+                {desktopColumns.map((column) => {
                   let description = ship[column.id];
                   if (column.id === 'active') {
                     description = description ? 'yes' : 'no';
