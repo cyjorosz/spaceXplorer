@@ -4,24 +4,13 @@ import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons
 
 import { Error } from 'components/Error/Error';
 import Loading from 'components/Loading/Loading';
-import * as S from './style';
-
 import { clearToken } from 'helpers/token';
 import useWindowWidth from 'helpers/useWindowWidth';
-
-// TO DO
-// - Header:
-//   - Displays title, description (copied from docs).
-//   - Log out button (routes to login page and removes authentication flag from local storage if it's persisted).
-
-// - Left - Table:
-//   - The table should be server-side paginated with 10 results by page. Pagination controls should contain buttons for previous/next page and total number of pages.
-
-// - Right - Details view:
-//   - Displays 'launches' list that contains urls to wikipeadia articles about the launches ship was apart of
+import * as S from './style';
 
 const Ships = () => {
   const SHIPS_API = `https://api.spacexdata.com/v4/ships`;
+  const fallbackImage = 'https://www.fillmurray.com/640/360';
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -51,10 +40,6 @@ const Ships = () => {
     if (!ships) {
       return [];
     }
-    // currentPage
-    // rowsPerPage
-    // return data based on ^
-    // Given the pageNumber, get the  for this page from ships
     return [...ships].slice((currentPage - 1) * rowsPerPage, rowsPerPage * currentPage);
   };
 
@@ -64,10 +49,7 @@ const Ships = () => {
       const response = await axios.get(SHIPS_API);
       setLoading(false);
       setTotalPages(Math.ceil(response.data.length / rowsPerPage));
-      console.log('totalpage', totalPages);
       setShips(response.data);
-
-      console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -78,10 +60,8 @@ const Ships = () => {
     fetchShipsData();
   }, [currentPage]);
 
-  // Sort the rows that are passed in, in the order defined by the sortOrder
   const sortRows = (rows, sortOrder) => {
     const orderByColumn = sortOrder.orderByColumn;
-    // console.log('sorting by ' + orderByColumn);
     const sortedRows = rows.sort((a, b) => {
       let ascendingOrder = a[orderByColumn] > b[orderByColumn] ? 1 : -1;
       if (sortOrder.orderDirection === 'asc') {
@@ -96,10 +76,8 @@ const Ships = () => {
   useMemo(() => sortRows(ships, sortOrder), [ships, sortOrder]);
 
   const handleSort = (orderByColumn) => {
-    // console.log('sorting by ' + orderByColumn);
     let orderDirection = 'asc';
     if (sortOrder.orderByColumn === orderByColumn) {
-      // If we have sorted on the same column, flip the sorting direction: ;
       orderDirection = sortOrder.orderDirection === 'asc' ? 'desc' : 'asc';
     }
     setSortOrder(() => ({
@@ -176,9 +154,7 @@ const Ships = () => {
             <div style={{ display: 'flex' }}>
               <div style={{ width: '220px' }}>
                 <img
-                  src={
-                    selectedShip.image ? selectedShip.image : 'https://www.fillmurray.com/640/360'
-                  }
+                  src={selectedShip.image ? selectedShip.image : fallbackImage}
                   alt="Ship"
                   style={{ maxWidth: '200px', height: '150px' }}
                 />

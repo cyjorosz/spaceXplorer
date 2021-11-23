@@ -1,20 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { saveTokenToSessionStorage, saveTokenToLocalStorage } from '../../helpers/token';
-// TO DO:
-// Textbox input fields are:
-
-// - Email (it should have input validation for email format 'xzy@test.com')
-// - Password (should be masked)
-
-// Checkbox input field:
-// - Remember me (if selected, authentication should be persisted in local storage)
-
-// The task here is to create 'fake' login page which checks input for email 'email@test.com' and password 'test123'.
-// - If different credentials are entered, the page should display an error message.
-// - If correct credentials are entered, the app should be routed to /ships page.
-// - If 'remember me' checkbox is checked, successful login should be persisted into the local storage (it can be a simple flag: authenticated: true/false), which means, when the app is reloaded from /ships page, the app should land on the /ships page again.
-// - If 'remember me' is not checked, successful login should not be persisted into the local storage, which means, when app is reloaded from /ships page, the app should land on the /login page.
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,7 +12,6 @@ const Login = () => {
 
   const loginUser = async (credentials) => {
     setError('');
-    // console.log('credentials 2', JSON.stringify(credentials));
     return axios.post(LOGIN_ENDPOINT, credentials).then((data) => {
       let response = data.data;
       if (response.success) {
@@ -46,12 +31,11 @@ const Login = () => {
       username: email,
       password: password,
     };
-    // console.log('credentials 1', JSON.stringify(credentials));
     await loginUser(credentials);
   };
 
-  const handleRememberMe = (e) => {
-    setRememberMe(e.target.checked);
+  const handleRememberMe = (event) => {
+    setRememberMe(event.target.checked);
   };
 
   return (
@@ -62,14 +46,14 @@ const Login = () => {
         <input
           type="text"
           placeholder="email"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(event) => setEmail(event.target.value)}
           required
         />
         <label>Email</label>
         <input
           type="password"
           placeholder="password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(event) => setPassword(event.target.value)}
           required
         />
         <label>Password</label>
