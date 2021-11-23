@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons/ti';
 
-import { Error } from 'components/Error/Error';
+import { ErrorMessage } from 'components/Error/ErrorMessage';
 import Loading from 'components/Loading/Loading';
 import { clearToken } from 'helpers/token';
 import useWindowWidth from 'helpers/useWindowWidth';
@@ -17,15 +17,15 @@ const Ships = () => {
   const [ships, setShips] = useState([]);
   const [selectedShip, setSelectedShip] = useState();
   const [sortOrder, setSortOrder] = useState({ orderDirection: 'asc', orderByColumn: 'id' });
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const { pageWidth } = useWindowWidth();
+  const width = useWindowWidth();
 
   const isColumnVisible = (column) => {
-    return pageWidth > 620 || !column.hiddenOnMobile;
+    console.log('column', column);
+    return width > 620 || !column.hiddenOnMobile;
   };
 
   const columns = [
@@ -148,7 +148,7 @@ const Ships = () => {
         <h2>Table with data from spaceX API</h2>
 
         <div>
-          {error && <Error error={error} />}
+          {error && <ErrorMessage />}
           {loading ? <Loading /> : null}
           {selectedShip && (
             <div style={{ display: 'flex' }}>
