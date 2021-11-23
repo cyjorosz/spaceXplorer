@@ -3,6 +3,7 @@ import axios from 'axios';
 import { saveTokenToSessionStorage, saveTokenToLocalStorage } from '../../helpers/token';
 
 import * as S from './styles';
+import { StyledButton } from '../Global/styles';
 interface LoginProps {
   username: string;
   password: string;
@@ -67,7 +68,7 @@ const Login: React.FC<LoginProps> = () => {
           <input type="checkbox" onChange={handleRememberMe} />
           <label>Remember me</label>
         </S.CheckboxWrapper>
-        <S.Button type="submit">Login</S.Button>
+        <StyledButton type="submit">Login</StyledButton>
       </S.Form>
     </S.Container>
   );
