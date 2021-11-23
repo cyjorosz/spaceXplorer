@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons/ti';
 
 import { Error } from 'components/Error/Error';
 import Loading from 'components/Loading/Loading';
 import * as S from './style';
 
+import { clearToken } from 'helpers/token';
 import useWindowWidth from 'helpers/useWindowWidth';
 
 // TO DO
@@ -112,6 +112,11 @@ const Ships = () => {
     setSelectedShip(ship);
   };
 
+  const handleLogout = () => {
+    clearToken();
+    window.location.href = '/login';
+  };
+
   const Table = () => {
     return (
       <S.Table>
@@ -159,7 +164,7 @@ const Ships = () => {
     <>
       <div>
         <h1>Header Component</h1>
-        <Link to="/login">Log out</Link>
+        <button onClick={handleLogout}>Log out</button>
       </div>
       <div>
         <h2>Table with data from spaceX API</h2>
