@@ -124,8 +124,13 @@ const Ships = () => {
           ships.map((ship) => {
             return (
               <tr key={ship.id}>
-                <td>{ship.name}</td>
-                <td>{ship.type}</td>
+                {mobileColumns.map((column) => {
+                  let description = ship[column.id];
+                  if (column.id === 'active') {
+                    description = description ? 'yes' : 'no';
+                  }
+                  return <td>{description}</td>;
+                })}
                 <td onClick={() => viewShipDetails(ship)}>view</td>
               </tr>
             );
@@ -160,12 +165,13 @@ const Ships = () => {
           ships.map((ship) => {
             return (
               <tr key={ship.id}>
-                <td>{ship.name}</td>
-                <td>{ship.type}</td>
-                <td>{ship.active === true ? 'Yes' : 'No'}</td>
-                <td>{ship.year_built}</td>
-                <td>{ship.home_port}</td>
-                <td onClick={() => viewShipDetails(ship)}>view</td>
+                {columns.map((column) => {
+                  let description = ship[column.id];
+                  if (column.id === 'active') {
+                    description = description ? 'yes' : 'no';
+                  }
+                  return <td>{description}</td>;
+                })}
               </tr>
             );
           })}
