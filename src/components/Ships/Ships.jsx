@@ -8,7 +8,6 @@ import Loading from 'components/Loading/Loading';
 import * as S from './style';
 
 import useWindowWidth from 'helpers/useWindowWidth';
-import { desktopColumns, mobileColumns } from './Columns';
 
 // TO DO
 // - Header:
@@ -32,6 +31,18 @@ const Ships = () => {
 
   const { width } = useWindowWidth();
   const breakpoint = 620;
+
+  const isColumnVisible = (column) => {
+    return width > breakpoint || !column.hiddenOnMobile;
+  };
+
+  const columns = [
+    { id: 'name', label: 'Name', hiddenOnMobile: false },
+    { id: 'type', label: 'Type', hiddenOnMobile: false },
+    { id: 'active', label: 'Active', hiddenOnMobile: true },
+    { id: 'year_built', label: 'Year Built', hiddenOnMobile: true },
+    { id: 'home_port', label: 'Home Port', hiddenOnMobile: true },
+  ];
 
   const fetchShipsData = async () => {
     setLoading(true);
@@ -84,11 +95,11 @@ const Ships = () => {
     setSelectedShip(ship);
   };
 
-  const MobileTable = () => {
+  const Table = () => {
     return (
-      <S.MobileTable>
+      <S.Table>
         <tr>
-          {mobileColumns.map((column) => {
+          {columns.map((column) => {
             const sortIcon = () => {
               if (column.id === sortOrder.orderByColumn) {
                 if (sortOrder.orderDirection === 'asc') {
@@ -100,68 +111,31 @@ const Ships = () => {
               }
             };
             return (
-              <th key={column.id} onClick={() => handleSort(column.id)}>
-                {column.label} {column.id !== 'details' ? sortIcon() : null}
-              </th>
+              isColumnVisible(column) && (
+                <th key={column.id} onClick={() => handleSort(column.id)}>
+                  {column.label} {column.id !== 'details' ? sortIcon() : null}
+                </th>
+              )
             );
           })}
+          <th>Details</th>
         </tr>
         {ships &&
           ships.map((ship) => {
             return (
               <tr key={ship.id}>
-                {mobileColumns.map((column) => {
+                {columns.map((column) => {
                   let description = ship[column.id];
                   if (column.id === 'active') {
                     description = description ? 'yes' : 'no';
                   }
-                  return <td>{description}</td>;
+                  return isColumnVisible(column) && <td>{description}</td>;
                 })}
                 <td onClick={() => viewShipDetails(ship)}>view</td>
               </tr>
             );
           })}
-      </S.MobileTable>
-    );
-  };
-
-  const DesktopTable = () => {
-    return (
-      <S.DesktopTable>
-        <tr>
-          {desktopColumns.map((column) => {
-            const sortIcon = () => {
-              if (column.id === sortOrder.orderByColumn) {
-                if (sortOrder.orderDirection === 'asc') {
-                  return <TiArrowSortedUp />;
-                }
-                return <TiArrowSortedDown />;
-              } else {
-                return <TiArrowUnsorted />;
-              }
-            };
-            return (
-              <th key={column.id} onClick={() => handleSort(column.id)}>
-                {column.label} {column.id !== 'details' ? sortIcon() : null}
-              </th>
-            );
-          })}
-        </tr>
-        {ships &&
-          ships.map((ship) => {
-            return (
-              <tr key={ship.id}>
-                {desktopColumns.map((column) => {
-                  let description = ship[column.id];
-                  if (column.id === 'active') {
-                    description = description ? 'yes' : 'no';
-                  }
-                  return <td>{description}</td>;
-                })}
-              </tr>
-            );
-          })}
-      </S.DesktopTable>
+      </S.Table>
     );
   };
 
@@ -198,7 +172,8 @@ const Ships = () => {
             </div>
           )}
         </div>
-        {width < breakpoint ? <MobileTable /> : <DesktopTable />}
+        <Table />
+        {/* {width < breakpoint ? <MobileTable /> : <DesktopTable />} */}
       </div>
     </>
   );
