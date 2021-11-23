@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // TO DO:
 // Textbox input fields are:
 
@@ -16,45 +16,49 @@ import React, { useState } from 'react';
 // - If 'remember me' checkbox is checked, successful login should be persisted into the local storage (it can be a simple flag: authenticated: true/false), which means, when the app is reloaded from /ships page, the app should land on the /ships page again.
 // - If 'remember me' is not checked, successful login should not be persisted into the local storage, which means, when app is reloaded from /ships page, the app should land on the /login page.
 
-async function loginUser(credentials) {
-  return fetch('http://localhost:8080/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
-}
-
-// BEGIN refactoring to arrow function with API constant and use axios instead of native fetch
-// const LOGIN_ENDPOINT = 'http://localhost:8080/login';
-// const loginUser = async (credentials) => {
-//   return axios
-//     .post(LOGIN_ENDPOINT, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(credentials),
-//     })
-//     .then((data) => data.json());
-// };
-
 const Login = ({ setToken }) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+
+  const LOGIN_ENDPOINT = 'http://localhost:8080/login';
+
+  const loginUser = async (credentials, setToken) => {
+    setError('');
+    // console.log('credentials 2', JSON.stringify(credentials));
+    return axios.post(LOGIN_ENDPOINT, credentials).then((data) => {
+      let response = data.data;
+      console.log(JSON.stringify(response));
+      if (response.success) {
+        // let rememberMe = false;
+        // if (rememberMe) {
+        //   // TODO persist token in local storage
+        // }
+        // console.log('Token is ' + response.token);
+        setToken(response.token);
+        navigate('/ships');
+      } else {
+        setError(response.errorMessage);
+      }
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = await loginUser({
-      email,
-      password,
-    });
-    setToken(token);
+    const credentials = {
+      username: email,
+      password: password,
+    };
+    // console.log('credentials 1', JSON.stringify(credentials));
+    await loginUser(credentials, setToken);
   };
 
   return (
     <>
       <h1>Log in</h1>
+      <div>{error && error}</div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
