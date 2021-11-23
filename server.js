@@ -8,7 +8,8 @@ app.use(cors());
 
 app.post('/login', (req, res) => {
   console.log(JSON.stringify(req.body))
-  if(req.body.username === 'email@test.com' && req.body.password === 'test123') {
+  if(true) {
+  //if(req.body.username === 'email@test.com' && req.body.password === 'test123') {
     res.send({
       success: true,
       token: 'test123'

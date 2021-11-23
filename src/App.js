@@ -3,12 +3,12 @@ import { Routes, Route } from 'react-router-dom'
 
 import Login from 'components/Login/Login';
 import Ships from 'components/Ships/Ships';
-import { getToken, setToken } from 'helpers/token';
+import { getToken } from 'helpers/token';
 
 const App = () => {
 
   if(!getToken()) {
-    return <Login setToken={setToken} />
+    return <Login />
   }
 
   return (
