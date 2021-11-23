@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { saveTokenToSessionStorage, saveTokenToLocalStorage } from '../../helpers/token';
 
+import * as S from './styles';
 interface LoginProps {
   username: string;
   password: string;
@@ -44,29 +45,31 @@ const Login: React.FC<LoginProps> = () => {
   };
 
   return (
-    <>
+    <S.Container>
       <h1>Log in</h1>
-      <div>{error && error}</div>
-      <form onSubmit={handleSubmit}>
+      <S.ErrorMessage>{error && error}</S.ErrorMessage>
+      <S.Form onSubmit={handleSubmit}>
+        <label>Email</label>
         <input
           type="text"
           placeholder="email"
           onChange={(event) => setEmail(event.target.value)}
           required
         />
-        <label>Email</label>
+        <label>Password</label>
         <input
           type="password"
           placeholder="password"
           onChange={(event) => setPassword(event.target.value)}
           required
         />
-        <label>Password</label>
-        <input type="checkbox" onChange={handleRememberMe} />
-        <label>Remember me</label>
-        <button type="submit">Login</button>
-      </form>
-    </>
+        <S.CheckboxWrapper>
+          <input type="checkbox" onChange={handleRememberMe} />
+          <label>Remember me</label>
+        </S.CheckboxWrapper>
+        <S.Button type="submit">Login</S.Button>
+      </S.Form>
+    </S.Container>
   );
 };
 
