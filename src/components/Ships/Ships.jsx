@@ -5,6 +5,9 @@ import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons
 
 import { Error } from 'components/Error/Error';
 import Loading from 'components/Loading/Loading';
+import * as S from './style';
+
+import useWindowWidth from 'helpers/useWindowWidth';
 
 // TO DO
 // - Header:
@@ -26,13 +29,16 @@ const Ships = () => {
   const [selectedShip, setSelectedShip] = useState();
   const [sortOrder, setSortOrder] = useState({ orderDirection: 'asc', orderByColumn: 'id' });
 
+  const { width } = useWindowWidth();
+  const breakpoint = 620;
+
   const fetchShipsData = async () => {
     setLoading(true);
     try {
-      let response = await axios.get(SHIPS_API);
+      const response = await axios.get(SHIPS_API);
       setLoading(false);
       setShips(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -49,6 +55,12 @@ const Ships = () => {
     { id: 'active', label: 'Active' },
     { id: 'year_built', label: 'Year Built' },
     { id: 'home_port', label: 'Home Port' },
+    { id: 'details', label: 'Details' },
+  ];
+
+  const mobileColumns = [
+    { id: 'name', label: 'Name' },
+    { id: 'type', label: 'Type' },
     { id: 'details', label: 'Details' },
   ];
 
@@ -86,6 +98,81 @@ const Ships = () => {
     setSelectedShip(ship);
   };
 
+  const MobileTable = () => {
+    return (
+      <S.MobileTable>
+        <tr>
+          {mobileColumns.map((column) => {
+            const sortIcon = () => {
+              if (column.id === sortOrder.orderByColumn) {
+                if (sortOrder.orderDirection === 'asc') {
+                  return <TiArrowSortedUp />;
+                }
+                return <TiArrowSortedDown />;
+              } else {
+                return <TiArrowUnsorted />;
+              }
+            };
+            return (
+              <th key={column.id} onClick={() => handleSort(column.id)}>
+                {column.label} {column.id !== 'details' ? sortIcon() : null}
+              </th>
+            );
+          })}
+        </tr>
+        {ships &&
+          ships.map((ship) => {
+            return (
+              <tr key={ship.id}>
+                <td>{ship.name}</td>
+                <td>{ship.type}</td>
+                <td onClick={() => viewShipDetails(ship)}>view</td>
+              </tr>
+            );
+          })}
+      </S.MobileTable>
+    );
+  };
+
+  const DesktopTable = () => {
+    return (
+      <S.DesktopTable>
+        <tr>
+          {columns.map((column) => {
+            const sortIcon = () => {
+              if (column.id === sortOrder.orderByColumn) {
+                if (sortOrder.orderDirection === 'asc') {
+                  return <TiArrowSortedUp />;
+                }
+                return <TiArrowSortedDown />;
+              } else {
+                return <TiArrowUnsorted />;
+              }
+            };
+            return (
+              <th key={column.id} onClick={() => handleSort(column.id)}>
+                {column.label} {column.id !== 'details' ? sortIcon() : null}
+              </th>
+            );
+          })}
+        </tr>
+        {ships &&
+          ships.map((ship) => {
+            return (
+              <tr key={ship.id}>
+                <td>{ship.name}</td>
+                <td>{ship.type}</td>
+                <td>{ship.active === true ? 'Yes' : 'No'}</td>
+                <td>{ship.year_built}</td>
+                <td>{ship.home_port}</td>
+                <td onClick={() => viewShipDetails(ship)}>view</td>
+              </tr>
+            );
+          })}
+      </S.DesktopTable>
+    );
+  };
+
   return (
     <>
       <div>
@@ -119,42 +206,7 @@ const Ships = () => {
             </div>
           )}
         </div>
-        <table>
-          <tbody>
-            <tr>
-              {columns.map((column) => {
-                const sortIcon = () => {
-                  if (column.id === sortOrder.orderByColumn) {
-                    if (sortOrder.orderDirection === 'asc') {
-                      return <TiArrowSortedUp />;
-                    }
-                    return <TiArrowSortedDown />;
-                  } else {
-                    return <TiArrowUnsorted />;
-                  }
-                };
-                return (
-                  <th key={column.id} onClick={() => handleSort(column.id)}>
-                    {column.label} {column.id !== 'details' ? sortIcon() : null}
-                  </th>
-                );
-              })}
-            </tr>
-            {ships &&
-              ships.map((ship) => {
-                return (
-                  <tr key={ship.id}>
-                    <td>{ship.name}</td>
-                    <td>{ship.type}</td>
-                    <td>{ship.active === true ? 'Yes' : 'No'}</td>
-                    <td>{ship.year_built}</td>
-                    <td>{ship.home_port}</td>
-                    <td onClick={() => viewShipDetails(ship)}>view</td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+        {width < breakpoint ? <MobileTable /> : <DesktopTable />}
       </div>
     </>
   );
