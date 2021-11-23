@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { setToken } from '../../helpers/token';
 // TO DO:
 // Textbox input fields are:
 
@@ -16,29 +16,28 @@ import { useNavigate } from 'react-router-dom';
 // - If 'remember me' checkbox is checked, successful login should be persisted into the local storage (it can be a simple flag: authenticated: true/false), which means, when the app is reloaded from /ships page, the app should land on the /ships page again.
 // - If 'remember me' is not checked, successful login should not be persisted into the local storage, which means, when app is reloaded from /ships page, the app should land on the /login page.
 
-const Login = ({ setToken }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const navigate = useNavigate();
-
   const LOGIN_ENDPOINT = 'http://localhost:8080/login';
 
-  const loginUser = async (credentials, setToken) => {
+  const loginUser = async (credentials) => {
     setError('');
     // console.log('credentials 2', JSON.stringify(credentials));
     return axios.post(LOGIN_ENDPOINT, credentials).then((data) => {
       let response = data.data;
       console.log(JSON.stringify(response));
       if (response.success) {
-        // let rememberMe = false;
-        // if (rememberMe) {
-        //   // TODO persist token in local storage
-        // }
+        let rememberMe = false;
+        if (rememberMe) {
+          // TODO persist token in local storage
+        }
         // console.log('Token is ' + response.token);
         setToken(response.token);
-        navigate('/ships');
+        window.location.href = '/ships';
+        //navigate(() => '/ships');
       } else {
         setError(response.errorMessage);
       }
@@ -52,7 +51,7 @@ const Login = ({ setToken }) => {
       password: password,
     };
     // console.log('credentials 1', JSON.stringify(credentials));
-    await loginUser(credentials, setToken);
+    await loginUser(credentials);
   };
 
   return (

@@ -3,14 +3,11 @@ import { Routes, Route } from 'react-router-dom'
 
 import Login from 'components/Login/Login';
 import Ships from 'components/Ships/Ships';
-
-import useToken from './helpers/useToken';
-
+import { getToken, setToken } from 'helpers/token';
 
 const App = () => {
-  const { token, setToken } = useToken();
 
-  if(!token) {
+  if(!getToken()) {
     return <Login setToken={setToken} />
   }
 
@@ -18,7 +15,7 @@ const App = () => {
     <>
     <h1>Space Xplorer</h1>
       <Routes>
-        {/* <Route path="/login" element={<Login />}/> */}
+        <Route path="/login" element={<Login />}/>
         <Route path="/ships" element={<Ships />}/>
         <Route />
       </Routes>
