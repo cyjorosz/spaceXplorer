@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { saveTokenToSessionStorage, saveTokenToLocalStorage } from '../../helpers/token';
 
-const Login = () => {
+interface LoginProps {
+  username: string;
+  password: string;
+}
+
+const Login: React.FC<LoginProps> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,7 +15,7 @@ const Login = () => {
 
   const LOGIN_ENDPOINT = 'http://localhost:8080/login';
 
-  const loginUser = async (credentials) => {
+  const loginUser = async (credentials: LoginProps) => {
     setError('');
     return axios.post(LOGIN_ENDPOINT, credentials).then((data) => {
       let response = data.data;
@@ -25,7 +30,7 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const credentials = {
       username: email,
@@ -34,7 +39,7 @@ const Login = () => {
     await loginUser(credentials);
   };
 
-  const handleRememberMe = (event) => {
+  const handleRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(event.target.checked);
   };
 
@@ -57,7 +62,7 @@ const Login = () => {
           required
         />
         <label>Password</label>
-        <input type="checkbox" value={rememberMe} onChange={handleRememberMe} />
+        <input type="checkbox" onChange={handleRememberMe} />
         <label>Remember me</label>
         <button type="submit">Login</button>
       </form>
