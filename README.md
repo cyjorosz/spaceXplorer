@@ -34,5 +34,6 @@ State is managed using [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 - Split components up, the Ships file is too bloated, needs to be split into a Pagination and Table component
 - Add tests that validate the correct behaviour
 - Add additional styling and also style based on props such as adding background color to the row which is selected when the user clicks 'View'
+- Extend style theme to include preset media queries
 - Investigate whether it makes sense to look at other hooks for managing state (useReducer)
 - Replace window.location - refactor this to use React Router navigation
