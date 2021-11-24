@@ -5,20 +5,18 @@ import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons
 import Loading from 'components/Loading/Loading';
 import { clearToken } from 'helpers/token';
 import useWindowWidth from 'helpers/useWindowWidth';
-import * as S from './style';
-import { StyledButton } from 'components/Global/styles';
 
+import * as S from './styles';
+import { StyledButton } from 'components/Global/styles';
 interface TableColumn {
   id: string;
   label: string;
   hiddenOnMobile: boolean;
 }
-
 interface SortOrder {
   orderDirection: string;
   orderByColumn: string;
 }
-
 interface Ship {
   id: string;
   name: string;
@@ -100,7 +98,6 @@ const Ships = () => {
       const ships: Ship[] = response.data;
       setShips(ships);
     } catch (error: unknown) {
-      console.error(error);
       setLoading(false);
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -228,49 +225,31 @@ const Ships = () => {
       <S.Wrapper>
         {errorMessage && <div>{errorMessage}</div>}
         {loading ? <Loading /> : null}
-        <S.ShipContainer>
-          <S.ShipDetail>
-            {selectedShip && (
-              <div>
-                <div>
-                  <img src={selectedShip.image ? selectedShip.image : fallbackImage} alt="Ship" />
-                </div>
-                <div>
-                  <h2>{selectedShip.name}</h2>
-                  <div>
-                    {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
-                  </div>
-                  <p>{selectedShip.roles && selectedShip.roles.join()}</p>
-                </div>
-              </div>
-            )}
-          </S.ShipDetail>
-          <Table />
-        </S.ShipContainer>
 
-        <S.Pagination>
-          <div>
-            Page {currentPage} of {totalPages}
-          </div>
-          {currentPage > 1 && (
-            <StyledButton
-              onClick={() => {
-                setCurrentPage(currentPage - 1);
-              }}
-            >
-              Previous
-            </StyledButton>
+        <S.ShipDetail>
+          {selectedShip && (
+            <div>
+              <div>
+                <img src={selectedShip.image ? selectedShip.image : fallbackImage} alt="Ship" />
+              </div>
+              <div>
+                <h2>{selectedShip.name}</h2>
+                <div>
+                  {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
+                </div>
+                <p>{selectedShip.roles && selectedShip.roles.join()}</p>
+              </div>
+            </div>
           )}
-          {currentPage < totalPages && (
-            <StyledButton
-              onClick={() => {
-                setCurrentPage(currentPage + 1);
-              }}
-            >
-              Next
-            </StyledButton>
-          )}
-        </S.Pagination>
+        </S.ShipDetail>
+        <S.ShipContainer>
+          <Table />
+          <S.Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        </S.ShipContainer>
       </S.Wrapper>
     </S.Container>
   );
