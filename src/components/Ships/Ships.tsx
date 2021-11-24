@@ -225,7 +225,6 @@ const Ships = () => {
       <S.Wrapper>
         {errorMessage && <div>{errorMessage}</div>}
         {loading ? <Loading /> : null}
-
         <S.ShipDetail>
           {selectedShip && (
             <div>
