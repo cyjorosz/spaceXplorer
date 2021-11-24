@@ -31,7 +31,7 @@ State is managed using [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ## Outstanding Improvements
 
-- Split components up, the Ships file is too bloated, needs to be split into a Pagination and Table component
+- Split components up, the Ships file is too bloated, needs to move Table component
 - Add tests that validate the correct behaviour
 - Add additional styling and also style based on props such as adding background color to the row which is selected when the user clicks 'View'
 - Extend style theme to include preset media queries
