@@ -9,8 +9,7 @@ export const StyledButton = styled.button`
     line-height: 24px;
     color: white;
     height: 40px;
-    width: 100%;
-    margin-right: 20px;
+    width: 100px;
     :hover {
     cursor: pointer;
     background: ${theme.colors.gradient};

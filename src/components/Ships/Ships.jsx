@@ -7,6 +7,7 @@ import Loading from 'components/Loading/Loading';
 import { clearToken } from 'helpers/token';
 import useWindowWidth from 'helpers/useWindowWidth';
 import * as S from './style';
+import { StyledButton } from 'components/Global/styles';
 
 const Ships = () => {
   const SHIPS_API = `https://api.spacexdata.com/v4/ships`;
@@ -130,7 +131,9 @@ const Ships = () => {
                 }
                 return isColumnVisible(column) && <td>{description}</td>;
               })}
-              <td onClick={() => viewShipDetails(ship)}>view</td>
+              <td onClick={() => viewShipDetails(ship)}>
+                <button>view</button>
+              </td>
             </tr>
           );
         })}
@@ -139,62 +142,59 @@ const Ships = () => {
   };
 
   return (
-    <>
-      <div>
-        <h1>Header Component</h1>
-        <button onClick={handleLogout}>Log out</button>
-      </div>
-      <div>
-        <h2>Table with data from spaceX API</h2>
-
-        <div>
-          {error && <ErrorMessage />}
-          {loading ? <Loading /> : null}
-          {selectedShip && (
-            <div style={{ display: 'flex' }}>
-              <div style={{ width: '220px' }}>
-                <img
-                  src={selectedShip.image ? selectedShip.image : fallbackImage}
-                  alt="Ship"
-                  style={{ maxWidth: '200px', height: '150px' }}
-                />
-              </div>
-              <div style={{ width: 'auto' }}>
-                <h2 style={{ marginTop: '0px' }}>{selectedShip.name}</h2>
+    <S.Container>
+      <S.Header>
+        <h1>Space Xplorer</h1>
+        <StyledButton onClick={handleLogout}>Log out</StyledButton>
+      </S.Header>
+      <S.Wrapper>
+        {error && <ErrorMessage />}
+        {loading ? <Loading /> : null}
+        <S.ShipContainer>
+          <S.ShipDetail>
+            {selectedShip && (
+              <div>
                 <div>
-                  {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
+                  <img src={selectedShip.image ? selectedShip.image : fallbackImage} alt="Ship" />
                 </div>
-                <p>{selectedShip.roles.join()}</p>
+                <div>
+                  <h2>{selectedShip.name}</h2>
+                  <div>
+                    {selectedShip.year_built ? <p>Built: {selectedShip.year_built}</p> : null}
+                  </div>
+                  <p>{selectedShip.roles.join()}</p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-        <Table />
-        <div>
+            )}
+          </S.ShipDetail>
+          <Table />
+        </S.ShipContainer>
+
+        <S.Pagination>
           <div>
             Page {currentPage} of {totalPages}
           </div>
           {currentPage > 1 && (
-            <button
+            <StyledButton
               onClick={() => {
                 setCurrentPage(currentPage - 1);
               }}
             >
               Previous
-            </button>
+            </StyledButton>
           )}
           {currentPage < totalPages && (
-            <button
+            <StyledButton
               onClick={() => {
                 setCurrentPage(currentPage + 1);
               }}
             >
               Next
-            </button>
+            </StyledButton>
           )}
-        </div>
-      </div>
-    </>
+        </S.Pagination>
+      </S.Wrapper>
+    </S.Container>
   );
 };
 
